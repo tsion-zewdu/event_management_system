@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from .models import Event, RSVP
 from .serializers import EventSerializer, RSVPSerializer
+from .permissions import IsOwnerOrReadOnly
 
 #all events & Create event
 class EventListCreateView(generics.ListCreateAPIView):
@@ -11,11 +12,10 @@ class EventListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
-# Retrieve, Update, Delete single event
 class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
 class RSVPCreateView(generics.CreateAPIView):
     queryset = RSVP.objects.all()
