@@ -11,25 +11,27 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         related_name='events'
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
-
+    class Meta:
+        ordering = ['-created_at']
 
 class RSVP(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
-    event = models.ForeignKey(
-        Event,
-        on_delete=models.CASCADE,
-        related_name='rsvps'
-    )
+    STATUS_CHOICES = [
+        ('Going', 'Going'),
+        ('Maybe', 'Maybe'),
+        ('Not Going', 'Not Going'),
+    ]
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='rsvps')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rsvps')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'event')
+        unique_together = ('event', 'user')
 
     def __str__(self):
-        return f"{self.user.username} - {self.event.title}"
+        return f"{self.user.username} - {self.event.title} ({self.status})"

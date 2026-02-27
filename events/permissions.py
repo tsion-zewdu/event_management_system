@@ -11,5 +11,6 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
+        owner = getattr(obj, 'created_by', getattr(obj, 'user', None))
         # Write permissions only allowed to creator
         return obj.created_by == request.user

@@ -8,7 +8,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['id', 'title', 'description', 'date', 'location', 'created_by']
-
+        read_only_fields = ['creator']
 
 class RSVPSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
