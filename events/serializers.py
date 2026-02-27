@@ -15,4 +15,5 @@ class RSVPSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RSVP
-        fields = ['id', 'user', 'event', 'created_at']
+        fields = '__all__'
+        read_only_fields = ['user']
