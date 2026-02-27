@@ -24,7 +24,15 @@ class RSVPCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        
+class RSVPUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RSVP.objects.all()
+    serializer_class = RSVPSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        return RSVP.objects.filter(user=self.request.user)
+    
 class EventRSVPListView(generics.ListAPIView):
     serializer_class = RSVPSerializer
     permission_classes = [permissions.IsAuthenticated]
